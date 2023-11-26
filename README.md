@@ -1,1 +1,0 @@
-# Devvorte-Writeup
